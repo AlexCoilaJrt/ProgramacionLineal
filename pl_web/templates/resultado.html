@@ -1,72 +1,78 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Resultado</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <meta charset="UTF-8" />
+    <title>Resultado de la Optimización</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <style>
         body {
             background-color: #f4f6f9;
-            padding-top: 40px;
+            padding: 40px 0;
+            font-family: Arial, sans-serif;
         }
         .container {
             max-width: 800px;
             background: #fff;
-            padding: 30px;
+            padding: 30px 40px;
             border-radius: 15px;
             box-shadow: 0 0 20px rgba(0,0,0,0.1);
         }
         h1, h3 {
             color: #0d6efd;
+            margin-bottom: 20px;
         }
         ul {
             padding-left: 20px;
-        }
-        img {
-            max-width: 100%;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            margin-top: 15px;
+            list-style-type: disc;
         }
         .btn-return {
-            margin-top: 25px;
+            margin-top: 30px;
+        }
+        #plotly-div {
+            height: 500px;
+            margin-top: 30px;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1 class="text-center mb-4">Resultado de la Optimización</h1>
+        <h1 class="text-center">Resultado de la Optimización</h1>
 
-        <div class="mb-3">
+        <div class="mb-4">
             <p><strong>Estado:</strong> {{ resultado }}</p>
-            <p><strong>Valor óptimo (Z):</strong> {{ z }}</p>
+            <p><strong>Valor óptimo (Z):</strong> {{ "%.4f"|format(z) if z is not none else "N/A" }}</p>
         </div>
 
         <div class="mb-4">
             <h3>Variables:</h3>
-            <ul class="list-group">
+            <ul>
                 {% for var in variables %}
-                <li class="list-group-item">{{ var[0] }} = {{ "%.2f"|format(var[1]) }}</li>
+                    <li>{{ var[0] }} = {{ "%.4f"|format(var[1]) if var[1] is not none else "0.0000" }}</li>
                 {% endfor %}
             </ul>
         </div>
 
         <div class="mb-4">
             <h3>Holguras:</h3>
-            <ul class="list-group">
+            <ul>
                 {% for h in holguras %}
-                <li class="list-group-item">{{ h }}</li>
+                    <li>{{ h }}</li>
                 {% endfor %}
             </ul>
         </div>
 
         {% if plot_url %}
-        <div class="mb-4">
-            <h3>Gráfico Explicativo</h3>
-            <p class="text-muted">Las líneas representan restricciones, la región sombreada es la región factible, y el punto negro es la solución óptima.</p>
-            <img src="data:image/png;base64,{{ plot_url }}" alt="Gráfico de solución óptima">
-        </div>
-        {% endif %}
+<div id="plotly-div" style="height:500px;"></div>
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script>
+  // Parseamos la cadena JSON inyectada sin escapes
+  var plotData = JSON.parse(`{{ plot_url | safe }}`);
+  Plotly.newPlot('plotly-div', plotData.data, plotData.layout);
+</script>
+{% endif %}
+
+        
 
         <div class="text-center btn-return">
             <a href="/" class="btn btn-outline-primary">&larr; Volver al inicio</a>
