@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Programación Lineal</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f4f6f9;
+            padding-top: 40px;
+        }
+        .container {
+            max-width: 700px;
+            background: #fff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        h1 {
+            margin-bottom: 30px;
+        }
+        .form-section {
+            margin-bottom: 25px;
+        }
+        .form-section h4 {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center text-primary">Resolver Problema de Programación Lineal</h1>
+        <form method="POST">
+            <div class="form-section">
+                <label class="form-label">Objetivo:</label>
+                <select name="objetivo" class="form-select">
+                    <option value="max">Maximizar</option>
+                    <option value="min">Minimizar</option>
+                </select>
+            </div>
+
+            <div class="form-section">
+                <label class="form-label">Coeficientes de la función objetivo (separados por espacio):</label>
+                <input type="text" name="coef_obj" class="form-control">
+            </div>
+
+            <div class="form-section">
+                <label class="form-label">Número de restricciones:</label>
+                <input type="number" name="num_rest" min="1" max="10" class="form-control">
+            </div>
+
+            <div id="restricciones" class="form-section"></div>
+
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary btn-lg">Resolver</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        const numRestInput = document.querySelector('input[name="num_rest"]');
+        const restriccionesDiv = document.getElementById('restricciones');
+
+        numRestInput.addEventListener('change', () => {
+            restriccionesDiv.innerHTML = '';
+            const num = parseInt(numRestInput.value);
+            for (let i = 0; i < num; i++) {
+                restriccionesDiv.innerHTML += `
+                    <div class="border rounded p-3 mb-3 bg-light">
+                        <h5 class="text-secondary">Restricción R${i + 1}</h5>
+                        <label class="form-label">Coeficientes (separados por espacio):</label>
+                        <input type="text" name="coef_rest_${i}" class="form-control">
+                        <label class="form-label mt-2">Operador:</label>
+                        <select name="op_rest_${i}" class="form-select">
+                            <option value="<=">&le;</option>
+                            <option value=">=">&ge;</option>
+                            <option value="=">=</option>
+                        </select>
+                        <label class="form-label mt-2">Valor del lado derecho (RHS):</label>
+                        <input type="text" name="rhs_${i}" class="form-control">
+                    </div>
+                `;
+            }
+        });
+    </script>
+</body>
+</html>
