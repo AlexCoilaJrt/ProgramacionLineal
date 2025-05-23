@@ -5,8 +5,10 @@ import plotly
 import json
 from shapely.geometry import Polygon
 from itertools import combinations
+import os
 
-app = Flask(__name__, template_folder="../templates")
+app = Flask(__name__, template_folder="templates")
+
 
 @app.route("/", methods=["GET", "POST"])
 def index():
@@ -35,7 +37,12 @@ def index():
             )
         except Exception as e:
             return render_template(
-                "resultado.html", resultado=f"Error: {e}", variables=[], z=None, holguras=[], plot_url=None
+                "resultado.html",
+                resultado=f"Error: {e}",
+                variables=[],
+                z=None,
+                holguras=[],
+                plot_url=None,
             )
 
     return render_template("index.html")
@@ -168,11 +175,6 @@ def resolver_programacion_lineal(coef_objetivo, restricciones, rhs, operadores, 
     return resultado, var_result, z, holguras, plot_data
 
 
-# **Handler para Vercel WSGI**
-def handler(environ, start_response):
-    # Usamos el objeto WSGI app de Flask
-    return app(environ, start_response)
-
-
 if __name__ == "__main__":
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5001))
+    app.run(host="0.0.0.0", port=port)

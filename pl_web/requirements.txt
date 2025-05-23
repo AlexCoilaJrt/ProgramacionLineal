@@ -1,4 +1,4 @@
-Flask
-pulp
-plotly
-shapely
+Flask==2.3.2
+pulp==2.7.0
+plotly==5.15.0
+Shapely==2.0.1
